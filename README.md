@@ -10,7 +10,7 @@ Search a sports action image dataset by **uploading a photo** or **typing a desc
 - [x] CLIP embedding pipeline (open_clip, ViT-B/32)
 - [x] FAISS index over image embeddings
 - [x] Unified text/image search function
-- [ ] Evaluation (precision@k, recall@k, confusion breakdown)
+- [x] Evaluation (precision@k, recall@k, confusion breakdown)
 - [ ] Gradio demo app
 - [ ] Final README polish (architecture diagram, results, screenshots, limitations)
 

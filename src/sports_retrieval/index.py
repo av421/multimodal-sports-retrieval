@@ -62,8 +62,12 @@ def _search_worker(index_path: str, conn: "mp.connection.Connection") -> None:
         msg = conn.recv()
         if msg is None:
             break
-        queries, k = msg
-        conn.send(index.search(queries, k))
+        cmd, payload = msg
+        if cmd == "search":
+            queries, k = payload
+            conn.send(index.search(queries, k))
+        elif cmd == "reconstruct_all":
+            conn.send(index.reconstruct_n(0, index.ntotal))
     conn.close()
 
 
@@ -101,7 +105,13 @@ class IndexProcess:
         self._process.start()
 
     def search(self, queries: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
-        self._parent_conn.send((queries, k))
+        self._parent_conn.send(("search", (queries, k)))
+        return self._parent_conn.recv()
+
+    def reconstruct_all(self) -> np.ndarray:
+        """Return every vector stored in the index, in row order. Exact for
+        IndexFlatIP -- it stores the raw vectors, no approximation involved."""
+        self._parent_conn.send(("reconstruct_all", None))
         return self._parent_conn.recv()
 
     def close(self) -> None:
