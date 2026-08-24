@@ -57,33 +57,35 @@ def load_clip(
 @torch.no_grad()
 def embed_images(
     embedder: ClipEmbedder,
-    image_paths: list[Path],
+    images: list[Path | Image.Image],
     batch_size: int = 32,
     show_progress: bool = True,
-) -> tuple[np.ndarray, list[Path]]:
-    """Embed images in batches. Skips unreadable files rather than failing the run.
+) -> tuple[np.ndarray, list[Path | Image.Image]]:
+    """Embed images in batches. Accepts file paths (bulk indexing) or already-open
+    PIL Images (e.g. a Gradio upload with nothing on disk). Skips unreadable
+    entries rather than failing the whole run.
 
-    Returns (embeddings, valid_paths) -- valid_paths excludes any skipped files,
-    so callers must zip against it rather than the original image_paths.
+    Returns (embeddings, valid_images) -- valid_images excludes any skipped
+    entries, so callers must zip against it rather than the original list.
     """
     embeddings: list[np.ndarray] = []
-    valid_paths: list[Path] = []
+    valid_images: list[Path | Image.Image] = []
 
-    batches = range(0, len(image_paths), batch_size)
+    batches = range(0, len(images), batch_size)
     if show_progress:
         batches = tqdm(batches, desc="Embedding images", unit="batch")
 
     for start in batches:
-        batch_paths = image_paths[start : start + batch_size]
+        batch = images[start : start + batch_size]
         tensors = []
         batch_valid = []
-        for p in batch_paths:
+        for item in batch:
             try:
-                img = Image.open(p).convert("RGB")
-                tensors.append(embedder.preprocess(img))
-                batch_valid.append(p)
+                img = item if isinstance(item, Image.Image) else Image.open(item)
+                tensors.append(embedder.preprocess(img.convert("RGB")))
+                batch_valid.append(item)
             except Exception as e:
-                logger.warning("Skipping unreadable image %s: %s", p, e)
+                logger.warning("Skipping unreadable image %s: %s", item, e)
 
         if not tensors:
             continue
@@ -92,12 +94,12 @@ def embed_images(
         feats = embedder.model.encode_image(stack)
         feats = F.normalize(feats, dim=-1)
         embeddings.append(feats.cpu().numpy())
-        valid_paths.extend(batch_valid)
+        valid_images.extend(batch_valid)
 
     if not embeddings:
         return np.empty((0, embedder.model.visual.output_dim), dtype=np.float32), []
 
-    return np.concatenate(embeddings).astype(np.float32), valid_paths
+    return np.concatenate(embeddings).astype(np.float32), valid_images
 
 
 @torch.no_grad()

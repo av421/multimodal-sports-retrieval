@@ -80,6 +80,16 @@ class IndexProcess:
 
     Isolating the search call in its own process, which never imports
     torch, sidesteps the conflict entirely.
+
+    Caller constraint: on macOS, multiprocessing's required "spawn" start
+    method re-executes the launching script's top-level code in the child
+    (to rebuild sys.modules["__main__"] for unpickling) -- everything
+    outside an `if __name__ == "__main__":` guard runs again there. If the
+    outermost script (the one run as `python foo.py`) imports anything that
+    imports torch at module level, the child inherits it too, recreating
+    the exact conflict this class exists to avoid. Keep such imports inside
+    main()/`if __name__ == "__main__":` in any script that constructs an
+    IndexProcess (directly or via SearchEngine).
     """
 
     def __init__(self, index_path: Path) -> None:
