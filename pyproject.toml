@@ -1,0 +1,44 @@
+[project]
+name = "sports-retrieval"
+version = "0.1.0"
+description = "Multimodal (image + text) visual search over sports action images using CLIP embeddings and FAISS."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "torch>=2.2",
+    "open_clip_torch>=2.24",
+    "faiss-cpu>=1.8",
+    "kagglehub>=0.3",
+    "numpy>=1.26",
+    "pillow>=10.0",
+    "pandas>=2.2",
+    "tqdm>=4.66",
+    "gradio>=4.30",
+    "matplotlib>=3.8",
+    "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

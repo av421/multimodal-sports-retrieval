@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.installed.cfg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+*.kaggle.json
+kaggle.json
+access_token
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Project data & generated artifacts (regenerated from scripts, not committed)
+data/*
+artifacts/*
+!data/.gitkeep
+!artifacts/.gitkeep
+*.faiss
+*.index
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
