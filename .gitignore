@@ -37,6 +37,7 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.claude/
 
 # Project data & generated artifacts (regenerated from scripts, not committed)
 data/*

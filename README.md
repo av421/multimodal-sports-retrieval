@@ -11,7 +11,7 @@ Search a sports action image dataset by **uploading a photo** or **typing a desc
 - [x] FAISS index over image embeddings
 - [x] Unified text/image search function
 - [x] Evaluation (precision@k, recall@k, confusion breakdown)
-- [ ] Gradio demo app
+- [x] Gradio demo app
 - [ ] Final README polish (architecture diagram, results, screenshots, limitations)
 
 ## License
