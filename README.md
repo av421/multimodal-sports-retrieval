@@ -8,7 +8,7 @@ Search a sports action image dataset by **uploading a photo** or **typing a desc
 
 - [x] Data pipeline (Kaggle "100 Sports Image Classification" dataset)
 - [x] CLIP embedding pipeline (open_clip, ViT-B/32)
-- [ ] FAISS index over image embeddings
+- [x] FAISS index over image embeddings
 - [ ] Unified text/image search function
 - [ ] Evaluation (precision@k, recall@k, confusion breakdown)
 - [ ] Gradio demo app
